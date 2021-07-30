@@ -384,9 +384,16 @@
       getSuperFieldList(){
         <#include "/common/utils.ftl">
         let fieldList=[];
-         <#list columns as po>
-         fieldList.push(${superQueryFieldList(po)})
-         </#list>
+        <#list columns as po>
+        fieldList.push(${superQueryFieldList(po)})
+        </#list>
+        <#list subTables as sub>
+        let ${sub.entityName?uncap_first}Field = {'type':'sub-table','value':'${sub.tableName}','text':'${sub.ftlDescription}','children':[]};
+        <#list sub.colums as po>
+        ${sub.entityName?uncap_first}Field.children.push(${superQueryFieldList(po)})
+        </#list>
+        fieldList.push(${sub.entityName?uncap_first}Field)
+        </#list>
         this.superFieldList = fieldList
       }
     }
